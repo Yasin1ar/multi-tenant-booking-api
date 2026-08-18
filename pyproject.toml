@@ -22,6 +22,9 @@ dependencies = [
 [project.scripts]
 multi-tenant-booking-api = "multi_tenant_booking_api:main"
 
+[tool.uv]
+package = false
+
 [build-system]
 requires = ["uv_build>=0.12.5,<0.13.0"]
 build-backend = "uv_build"
