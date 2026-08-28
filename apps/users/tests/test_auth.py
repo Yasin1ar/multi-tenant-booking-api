@@ -30,8 +30,8 @@ class TestUserModel:
 
 
 @pytest.mark.django_db
-class TestJWTAuthentication:
-    """Tests for SimpleJWT auth endpoints (/api/v1/auth/token/)."""
+class TestAuthentication:
+    """Tests for auth endpoints (/api/v1/auth/)."""
 
     def test_obtain_token_success(self, client):
         user = UserFactory(username="testuser", password="securepassword123")
@@ -96,3 +96,52 @@ class TestJWTAuthentication:
 
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
         assert response.json()["code"] == "token_not_valid"
+
+    def test_register_user_success(self, client):
+        url = reverse("user_register")
+        payload = {
+            "username": "newclient",
+            "email": "newclient@example.com",
+            "password": "strongpassword123",
+            "password_confirm": "strongpassword123",
+        }
+
+        response = client.post(url, data=payload, content_type="application/json")
+        assert response.status_code == status.HTTP_201_CREATED
+        assert User.objects.filter(username="newclient").exists()
+
+    def test_get_me_unauthenticated_fails(self, client):
+        url = reverse("user_profile")
+        response = client.get(url)
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_get_me_authenticated_success(self, client):
+        url = reverse("user_register")
+        password = "strongpassword123"
+        username = "newclient"
+        payload = {
+            "username": username,
+            "email": "newclient@example.com",
+            "password": password,
+            "password_confirm": password,
+        }
+
+        client.post(url, data=payload, content_type="application/json")
+
+        url = reverse("user_profile")
+
+        # Obtain JWT Access Token
+        token_url = reverse("token_obtain_pair")
+        token_resp = client.post(
+            token_url,
+            data={"username": username, "password": password},
+            content_type="application/json",
+        )
+        access_token = token_resp.json()["access"]
+
+        # Request /me/ endpoint with Bearer Token header
+        headers = {"HTTP_AUTHORIZATION": f"Bearer {access_token}"}
+        response = client.get(url, **headers)
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.json()["username"] == "newclient"
