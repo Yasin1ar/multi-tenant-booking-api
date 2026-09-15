@@ -22,5 +22,5 @@ A high-concurrency RESTful backend API built with Django REST Framework, designe
 - [x] Phase 2: Multi-Tenant Data Models & Custom Auth
 - [ ] Phase 3: Concurrency Control & Row Locking (`select_for_update`)
 - [ ] Phase 4: Celery Background Workers & Stripe Webhooks
-- [ ] Phase 5: Automated Testing Suite (`pytest-django`)
+- [x] Phase 5: Automated Testing Suite (`pytest-django`)
 - [ ] Phase 6: CI/CD & Deployment
