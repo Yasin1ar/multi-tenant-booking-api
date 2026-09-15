@@ -7,31 +7,72 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('organizations', '0001_initial'),
+        ("organizations", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Booking',
+            name="Booking",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('start_time', models.DateTimeField(db_index=True)),
-                ('end_time', models.DateTimeField(db_index=True)),
-                ('status', models.CharField(choices=[('PENDING', 'Pending'), ('CONFIRMED', 'Confirmed'), ('CANCELLED', 'Cancelled')], db_index=True, default='PENDING', max_length=20)),
-                ('total_price', models.DecimalField(decimal_places=2, default=0.0, max_digits=10)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('resource', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='bookings', to='organizations.resource')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='bookings', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("start_time", models.DateTimeField(db_index=True)),
+                ("end_time", models.DateTimeField(db_index=True)),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("PENDING", "Pending"),
+                            ("CONFIRMED", "Confirmed"),
+                            ("CANCELLED", "Cancelled"),
+                        ],
+                        db_index=True,
+                        default="PENDING",
+                        max_length=20,
+                    ),
+                ),
+                (
+                    "total_price",
+                    models.DecimalField(decimal_places=2, default=0.0, max_digits=10),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "resource",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="bookings",
+                        to="organizations.resource",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="bookings",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'ordering': ['-start_time'],
-                'constraints': [models.CheckConstraint(condition=models.Q(('start_time__lt', models.F('end_time'))), name='booking_start_time_before_end_time')],
+                "ordering": ["-start_time"],
+                "constraints": [
+                    models.CheckConstraint(
+                        condition=models.Q(("start_time__lt", models.F("end_time"))),
+                        name="booking_start_time_before_end_time",
+                    )
+                ],
             },
         ),
     ]

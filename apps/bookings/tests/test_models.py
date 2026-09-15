@@ -17,7 +17,7 @@ def test_booking_end_time_before_start_time_fails():
 
     with pytest.raises(IntegrityError):
         Booking.objects.create(
-            user=user,  
+            user=user,
             resource=resource,
             start_time=now,
             end_time=now - timedelta(hours=1),  # Invalid!
