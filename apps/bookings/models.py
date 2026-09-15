@@ -14,7 +14,7 @@ class Booking(models.Model):
         CANCELLED = "CANCELLED", "Cancelled"
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    
+
     # Relationships
     resource = models.ForeignKey(
         Resource,
@@ -38,7 +38,7 @@ class Booking(models.Model):
         default=Status.PENDING,
         db_index=True,
     )
-    
+
     # Financial tracking
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 

@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class OrganizationsConfig(AppConfig):
-    name = 'apps.organizations'
+    name = "apps.organizations"
